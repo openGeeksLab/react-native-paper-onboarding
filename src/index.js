@@ -9,8 +9,9 @@ import PropTypes from 'prop-types';
 
 import styles from './styles';
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 const RESPOND_THRESHHOLD = width / 3;
+const tabIndicatorTopPosition = height / 4;
 
 class PaperOnboardingContainer extends Component {
   static propTypes = {
@@ -28,17 +29,20 @@ class PaperOnboardingContainer extends Component {
       _panResponder: PanResponder.create({
         onStartShouldSetPanResponder: (evt, gestureState) => true,
         onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-        // onMoveShouldSetResponderCapture: (evt, gestureState) => true,
-        // onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+        onMoveShouldSetResponderCapture: (evt, gestureState) => true,
+        onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+        onPanResponderMove: () => {
+
+          return true;
+        },
         onPanResponderRelease: (e, gestureState) => {
-          console.log(gestureState);
           const { moveX, x0 } = gestureState;
           deltaDistance = moveX - x0;
           if (Math.abs(deltaDistance) >= RESPOND_THRESHHOLD) {
             if (deltaDistance > 0) {
-              this.onSwipe('left');
-            } else {
               this.onSwipe('right');
+            } else {
+              this.onSwipe('left');
             }
           }
           return true;
@@ -76,6 +80,22 @@ class PaperOnboardingContainer extends Component {
     this.setState({ currentScreen: nextIndex });
   }
 
+  renderTabIndicators() {
+    const { routes, currentScreen } = this.state;
+    return routes.map((item, index) => {
+      return (
+        <View
+          style={[
+            styles.indicator,
+            currentScreen === index
+              ? styles.activeIndicator
+              : styles.inactiveIndicator
+          ]}
+        />
+      );
+    });
+  }
+
   render() {
     const { currentScreen, routes } = this.state;
 
@@ -85,6 +105,9 @@ class PaperOnboardingContainer extends Component {
         {...this.state._panResponder.panHandlers}
       >
         {routes[currentScreen]}
+        <View style={styles.indicatorContainer}>
+          {this.renderTabIndicators()}
+        </View>
       </View>
     );
   }
