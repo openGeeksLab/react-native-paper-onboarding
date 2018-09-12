@@ -11,11 +11,10 @@ import styles from './styles';
 
 const { width, height } = Dimensions.get('screen');
 const RESPOND_THRESHHOLD = width / 3;
-const tabIndicatorTopPosition = height / 4;
 
 class PaperOnboardingContainer extends Component {
   static propTypes = {
-
+    screens: PropTypes.array;
   }
   constructor(props) {
     super(props);

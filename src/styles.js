@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const { height } = Dimensions.get('screen');
-const tabIndicatorTopPosition = height / 15;
+const tabIndicatorTopPosition = 30;
 
 const styles = StyleSheet.create({
   container: {
@@ -9,15 +9,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(255, 255, 255)',
   },
   indicator: {
-    height: 14,
-    width: 14,
+    height: 8,
+    width: 8,
     borderWidth: 1,
-    borderRadius: 7,
-    marginHorizontal: 2,
+    borderRadius: 5,
+    marginHorizontal: 4,
   },
   activeIndicator: {
     borderColor: 'white',
     backgroundColor: 'white',
+    borderRadius: 6,
+    height: 11,
+    width: 11,
   },
   inactiveIndicator: {
     borderColor: 'white',
