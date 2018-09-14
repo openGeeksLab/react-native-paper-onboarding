@@ -11,21 +11,26 @@ import styles from './styles';
 
 const { width, height } = Dimensions.get('screen');
 const RESPOND_THRESHHOLD = width / 3;
-const viewSizeInterpolation = {
-  inputRange: [0, 1],
-  outputRange: [0, height * 2],
-};
-const viewPositionInterpolation = {
-  inputRange: [0, 1],
-  outputRange: [width / 2, 0],
-};
+
+
 const viewRadiusInterpolation = {
   inputRange: [0, 1],
   outputRange: [5, height / 2],
 };
+
+const viewRadiusInterpolationR = {
+  inputRange: [0, 0.01, 1],
+  outputRange: [0, height / 2, 1],
+};
+
 const viewScaleInterpolation = {
   inputRange: [0, 1],
   outputRange: [0, (height * 2) / 5],
+};
+
+const viewScaleInterpolationR = {
+  inputRange: [0, 0.01, 1],
+  outputRange: [0, (height * 2) / 5, 0],
 };
 
 class PaperOnboardingContainer extends Component {
@@ -36,17 +41,18 @@ class PaperOnboardingContainer extends Component {
   constructor(props) {
     super(props);
     const routes = this.props.screens.map(item => React.createElement(item));
-
+    this.nextBackground = 0;
+    this.direction = true;
     this.state = {
       routes,
       currentScreen: 0,
       backgroundAnimation: new Animated.Value(0),
       panResponder: PanResponder.create({
-        onStartShouldSetPanResponder: (evt, gestureState) => true,
-        onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-        onMoveShouldSetResponderCapture: (evt, gestureState) => true,
-        onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-        onPanResponderMove: () => {
+        onStartShouldSetPanResponder: () => true,
+        onStartShouldSetPanResponderCapture: () => true,
+        onMoveShouldSetResponderCapture: () => true,
+        onMoveShouldSetPanResponderCapture: () => true,
+        onPanResponderMove: (evt, gestureState) => {
 
           return true;
         },
@@ -67,16 +73,17 @@ class PaperOnboardingContainer extends Component {
   }
 
   onSwipe(direction) {
+    this.nextBackground = this.props.screens[this.getNextScreenIndex(direction)].backgroundColor;
     if (direction === 'left') {
-
-    } else if (direction === 'right') {
-
+      this.direction = true;
+    } else {
+      this.direction = false;
     }
-    this.startBackgroundAnimation();
-    this.navigate(direction);
+
+    this.startBackgroundAnimation(() => this.navigate(direction));
   }
 
-  navigate(direction) {
+  getNextScreenIndex(direction) {
     const { currentScreen, routes } = this.state;
     let directionModifier = 0;
     if (direction === 'left') {
@@ -91,23 +98,31 @@ class PaperOnboardingContainer extends Component {
     } else if (nextIndex >= routes.length) {
       nextIndex = 0;
     }
-
-    this.setState({ currentScreen: nextIndex });
+    return nextIndex;
   }
 
-  startBackgroundAnimation() {
+  navigate(direction) {
+    this.setState({ currentScreen: this.getNextScreenIndex(direction) });
+  }
+
+  startBackgroundAnimation(callback) {
     const { backgroundAnimation } = this.state;
     Animated.timing(
       backgroundAnimation,
       {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
       },
-    ).start(() => backgroundAnimation.setValue(0));
+    ).start(() => {
+      backgroundAnimation.setValue(0);
+      if (callback) callback();
+    });
   }
 
-  renderRippleBackground(backgroundColor) {
+  renderRippleBackground(screen, backgroundColor, direction = true) {
     const { backgroundAnimation } = this.state;
+    const radius = direction ? viewRadiusInterpolation : viewRadiusInterpolationR;
+    const scale = direction ? viewScaleInterpolation : viewScaleInterpolationR;
     return (
       <Animated.View
         style={{
@@ -119,11 +134,14 @@ class PaperOnboardingContainer extends Component {
           height: 10,
           // width: backgroundAnimation.interpolate(viewSizeInterpolation),
           // height: backgroundAnimation.interpolate(viewSizeInterpolation),
-          backgroundColor: 'black',
-          borderRadius: backgroundAnimation.interpolate(viewRadiusInterpolation),
-          transform: [{ scale: backgroundAnimation.interpolate(viewScaleInterpolation) }],
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          borderRadius: backgroundAnimation.interpolate(radius),
+          transform: [{ scale: backgroundAnimation.interpolate(scale) }],
         }}
       />
+      // >
+      //   {screen}
+      // </Animated.View>
     );
   }
 
@@ -148,14 +166,13 @@ class PaperOnboardingContainer extends Component {
   render() {
     const { screens } = this.props;
     const { currentScreen, routes } = this.state;
-
     return (
       <View
         style={styles.container}
         {...this.state.panResponder.panHandlers}
       >
         {routes[currentScreen]}
-        {this.renderRippleBackground(screens[currentScreen].backgroundColor)}
+        {this.renderRippleBackground(routes[currentScreen], this.nextBackground, this.direction)}
         <View style={styles.indicatorContainer}>
           {this.renderTabIndicators()}
         </View>
