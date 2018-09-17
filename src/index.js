@@ -52,12 +52,10 @@ class PaperOnboardingContainer extends Component {
         onStartShouldSetPanResponderCapture: () => true,
         onMoveShouldSetResponderCapture: () => true,
         onMoveShouldSetPanResponderCapture: () => true,
-        onPanResponderMove: (evt, gestureState) => {
-
-          return true;
-        },
         onPanResponderRelease: (e, gestureState) => {
           const { moveX, x0 } = gestureState;
+          console.log(moveX, x0);
+
           const deltaDistance = moveX - x0;
           if (Math.abs(deltaDistance) >= RESPOND_THRESHHOLD) {
             if (deltaDistance > 0) {
@@ -148,19 +146,57 @@ class PaperOnboardingContainer extends Component {
   renderTabIndicators() {
     const { screens } = this.props;
     const { routes, currentScreen } = this.state;
-    return screens.map((item, index) => {
-      return (
-        <View
-          key={index}
-          style={[
-            styles.indicator,
-            currentScreen === index
-              ? styles.activeIndicator
-              : styles.inactiveIndicator,
-          ]}
-        />
-      );
+    const leftSide = [];
+    const rightSide = [];
+    let passActiveScreenFlag = false;
+    screens.forEach((item, index) => {
+      if (currentScreen === index) {
+        passActiveScreenFlag = true;
+      }
+      if (passActiveScreenFlag && index !== currentScreen) {
+        leftSide.push(
+          <View
+            key={index}
+            style={[
+              styles.indicator,
+              styles.inactiveIndicator,
+            ]}
+          />,
+        );
+      } else if (index !== currentScreen) {
+        rightSide.push(
+          <View
+            key={index}
+            style={[
+              styles.indicator,
+              styles.inactiveIndicator,
+            ]}
+          />,
+        );
+      }
     });
+
+    const ret = (
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+          {rightSide}
+        </View>
+        <View>
+          <View
+            key={'active_tab'}
+            style={[
+              styles.indicator,
+              styles.activeIndicator,
+            ]}
+          />
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          {leftSide}
+        </View>
+      </View>
+    );
+
+    return ret;
   }
 
   render() {
@@ -171,7 +207,9 @@ class PaperOnboardingContainer extends Component {
         style={styles.container}
         {...this.state.panResponder.panHandlers}
       >
-        {routes[currentScreen]}
+        <Animated.View style={{ flex: 1 }}>
+          {routes[currentScreen]}
+        </Animated.View>
         {this.renderRippleBackground(routes[currentScreen], this.nextBackground, this.direction)}
         <View style={styles.indicatorContainer}>
           {this.renderTabIndicators()}
