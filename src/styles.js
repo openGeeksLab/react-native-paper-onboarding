@@ -34,7 +34,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-  }
+  },
+  tabnabIndicatorContainer: {
+    flexDirection: 'row',
+  },
+  tabIndicatorRight: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  tabActiveContainer: {
+    alignItems: 'center',
+  },
+  tabIndicatorLeft: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nextScreenContainer: {
+    flex: 1,
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+  },
+  screenAnimatedContainer: {
+    flex: 1,
+  },
+  rippleView: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+  },
 });
 
 export default styles;
