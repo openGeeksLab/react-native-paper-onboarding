@@ -134,6 +134,7 @@ class PaperOnboardingContainer extends Component {
 
   startBackgroundAnimation(currentScreen, nextIndex, nextPoint, direction) {
     const { backgroundAnimation } = this.state;
+    const { screens } = this.props;
     this.setState(
       {
         nextIndex,
@@ -149,13 +150,13 @@ class PaperOnboardingContainer extends Component {
         { toValue: 1, duration: 900 },
       ).start(() => {
         backgroundAnimation.setValue(0);
-        this.nextBackground = this.props.screens[currentScreen].backgroundColor;
+        this.nextBackground = screens[currentScreen].backgroundColor;
 
         this.setState({
           nextIndex: null,
           animationFinish: true,
           currentScreen: nextIndex,
-          rootBackground: this.props.screens[nextIndex].backgroundColor,
+          rootBackground: screens[nextIndex].backgroundColor,
           nextPoint: { x: 0, y: 0 },
         });
       }),
