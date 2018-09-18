@@ -64,10 +64,10 @@ class PaperOnboardingContainer extends Component {
     this.nextBackground = 0;
     this.state = {
       routes,
-      direction: true,
       currentScreen: 0,
       animationFinish: true,
       nextPoint: { x: 0, y: 0 },
+      isSwipeDirectionLeft: true,
       rootBackground: this.props.screens[0].backgroundColor,
       backgroundAnimation: new Animated.Value(0),
       panResponder: PanResponder.create({
@@ -96,13 +96,13 @@ class PaperOnboardingContainer extends Component {
     };
   }
 
-  onSwipe(direction, nextPoint) {
+  onSwipe(swipeDirection, nextPoint) {
     const { currentScreen } = this.state;
-    const nextIndex = this.getNextScreenIndex(direction);
+    const nextIndex = this.getNextScreenIndex(swipeDirection);
 
-    const boolDir = direction === 'left';
+    const isSwipeDirectionLeft = swipeDirection === 'left';
 
-    this.nextBackground = boolDir
+    this.nextBackground = isSwipeDirectionLeft
       ? this.props.screens[nextIndex].backgroundColor
       : this.props.screens[currentScreen].backgroundColor;
 
@@ -110,7 +110,7 @@ class PaperOnboardingContainer extends Component {
       currentScreen,
       nextIndex,
       nextPoint,
-      boolDir,
+      isSwipeDirectionLeft,
     );
   }
 
@@ -132,41 +132,45 @@ class PaperOnboardingContainer extends Component {
     return nextIndex;
   }
 
-  startBackgroundAnimation(currentScreen, nextIndex, nextPoint, direction) {
+  callAnimations = (currentScreen, nextIndex) => {
     const { backgroundAnimation } = this.state;
     const { screens } = this.props;
+    Animated.timing(
+      backgroundAnimation,
+      { toValue: 1, duration: 900 },
+    ).start(() => {
+      backgroundAnimation.setValue(0);
+      this.nextBackground = screens[currentScreen].backgroundColor;
+
+      this.setState({
+        nextIndex: null,
+        animationFinish: true,
+        currentScreen: nextIndex,
+        rootBackground: screens[nextIndex].backgroundColor,
+        nextPoint: { x: 0, y: 0 },
+      });
+    });
+  }
+
+  startBackgroundAnimation = (currentScreen, nextIndex, nextPoint, isSwipeDirectionLeft) => {
     this.setState(
       {
         nextIndex,
         nextPoint,
-        direction,
+        isSwipeDirectionLeft,
         animationFinish: false,
-        rootBackground: direction
+        rootBackground: isSwipeDirectionLeft
           ? this.props.screens[currentScreen].backgroundColor
           : this.props.screens[nextIndex].backgroundColor,
       },
-      () => Animated.timing(
-        backgroundAnimation,
-        { toValue: 1, duration: 900 },
-      ).start(() => {
-        backgroundAnimation.setValue(0);
-        this.nextBackground = screens[currentScreen].backgroundColor;
-
-        this.setState({
-          nextIndex: null,
-          animationFinish: true,
-          currentScreen: nextIndex,
-          rootBackground: screens[nextIndex].backgroundColor,
-          nextPoint: { x: 0, y: 0 },
-        });
-      }),
+      () => this.callAnimations(currentScreen, nextIndex),
     );
   }
 
-  renderRippleBackground(screen, backgroundColor, direction = true) {
+  renderRippleBackground(screen, backgroundColor, isSwipeDirectionLeft = true) {
     const { backgroundAnimation, nextPoint, animationFinish } = this.state;
-    const radius = direction ? viewRadiusInterpolationR : viewRadiusInterpolation;
-    const scale = direction ? viewScaleInterpolation : viewScaleInterpolationR;
+    const radius = isSwipeDirectionLeft ? viewRadiusInterpolationR : viewRadiusInterpolation;
+    const scale = isSwipeDirectionLeft ? viewScaleInterpolation : viewScaleInterpolationR;
     if (!animationFinish) {
       return (
         <Animated.View
@@ -200,10 +204,10 @@ class PaperOnboardingContainer extends Component {
     };
   }
 
-  renderTabIndicators(direction) {
+  renderTabIndicators(isSwipeDirectionLeft) {
     const { screens } = this.props;
     const { currentScreen, backgroundAnimation } = this.state;
-    const translate = direction ? tabpanelInterpolation : tabpanelInterpolationR;
+    const translate = isSwipeDirectionLeft ? tabpanelInterpolation : tabpanelInterpolationR;
     const leftSide = [];
     const rightSide = [];
     let passActiveScreenFlag = false;
@@ -260,15 +264,13 @@ class PaperOnboardingContainer extends Component {
     );
   }
 
-  render() {
+  getScreensArray = () => {
     const {
       routes,
       nextIndex,
-      direction,
       currentScreen,
-      rootBackground,
     } = this.state;
-    const screensArray = [
+    return [
       <Animated.View
         key={'current_screen_container'}
         style={[styles.screenAnimatedContainer, this.fadeOutStyle()]}
@@ -286,6 +288,16 @@ class PaperOnboardingContainer extends Component {
         )
         : null,
     ];
+  }
+
+  render() {
+    const {
+      routes,
+      isSwipeDirectionLeft,
+      currentScreen,
+      rootBackground,
+    } = this.state;
+    const screensArray = this.getScreensArray();
 
     return (
       <View
@@ -295,10 +307,10 @@ class PaperOnboardingContainer extends Component {
         ]}
         {...this.state.panResponder.panHandlers}
       >
-        {this.renderRippleBackground(routes[currentScreen], this.nextBackground, direction)}
-        {direction ? screensArray : screensArray.reverse()}
+        {this.renderRippleBackground(routes[currentScreen], this.nextBackground, isSwipeDirectionLeft)}
+        {isSwipeDirectionLeft ? screensArray : screensArray.reverse()}
         <View style={styles.indicatorContainer}>
-          {this.renderTabIndicators(direction)}
+          {this.renderTabIndicators(isSwipeDirectionLeft)}
         </View>
       </View>
     );
