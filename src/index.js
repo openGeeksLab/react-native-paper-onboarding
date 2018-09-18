@@ -267,12 +267,10 @@ class PaperOnboardingContainer extends Component {
       currentScreen,
       rootBackground,
     } = this.state;
-    const currrentScreenAnim = direction ? this.fadeOutStyle : this.fadeOutStyle;
-    const nextScreenAnim = direction ? this.fadeInStyle : this.fadeInStyle;
     const screensArray = [
       <Animated.View
         key={'current_screen_container'}
-        style={[styles.screenAnimatedContainer, currrentScreenAnim()]}
+        style={[styles.screenAnimatedContainer, this.fadeOutStyle()]}
       >
         {routes[currentScreen]}
       </Animated.View>,
@@ -280,7 +278,7 @@ class PaperOnboardingContainer extends Component {
         ? (
           <Animated.View
             key={'next_screen_container'}
-            style={[styles.nextScreenContainer, nextScreenAnim()]}
+            style={[styles.nextScreenContainer, this.fadeInStyle()]}
           >
             {routes[nextIndex]}
           </Animated.View>
