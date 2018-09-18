@@ -24,7 +24,7 @@ This project is developed and maintained by <a href="https://www.openGeeksLab.co
 <a href="mailto:info@opengeekslab.com?subject=Project%20inquiry%20from%20Github">
 <img src="https://github.com/openGeeksLab/docs/blob/master/contact_our_team.png" width="25%" height="25%" style="max-width:100%;"></a>
 
-# react-native-tab-navigator
+# react-native-paper-onboarding
 
 ## Requirements
 - React Native 0.50+
@@ -32,9 +32,105 @@ This project is developed and maintained by <a href="https://www.openGeeksLab.co
 - Android 4.2+
 
 ## Installation
-
+Just run:
+- npm i @opengeekslab/react-native-paper-onboarding
 
 ## Basic usage
+The library depends on that each screen should contain a static backgroundColor field which contains the desired background color for this screen. The screen itself should have a transparent background
+```javascript
+import React, { Component } from 'react';
+
+import PaperOnboarding from 'react-native-paper-onboarding';
+
+import Screen1 from './screens/screen1';
+import Screen2 from './screens/screen2';
+import Screen3 from './screens/screen3';
+
+const screens = [Screen1, Screen2, Screen3];
+
+export default class App extends Component {
+  render() {
+    return (
+      <PaperOnboarding
+        screens={screens}
+      />
+    );
+  }
+}
+```
+## Screen example
+```javascript
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  Image,
+  View,
+  Text,
+} from 'react-native';
+
+import bgImage from './img.png';
+
+export default class App extends Component {
+  static backgroundColor = '#ff3631';
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            blurRadius={0}
+            source={bgImage}
+            style={styles.image}
+            resizeMode={'contain'}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitle}>
+            INVITE FRIENDS
+          </Text>
+          <Text style={styles.lilText}>
+            Listen Your Favorite Music Together
+          </Text>
+        </View>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
+  },
+  imageContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  textContainer: {
+    height: '27%',
+    paddingLeft: 25,
+    backgroundColor: 'transparent',
+  },
+  textTitle: {
+    fontSize: 56,
+    fontFamily: 'Bebas Neue',
+    color: 'rgb(255, 255, 255)',
+    backgroundColor: 'transparent',
+  },
+  lilText: {
+    fontSize: 13,
+    fontFamily: 'Montserrat',
+    color: 'rgb(255, 255, 255)',
+    backgroundColor: 'transparent',
+  },
+});
+```
 
 # Contact us if interested.
 <a href="https://opengeekslab.com/contact-us/">
@@ -42,7 +138,3 @@ This project is developed and maintained by <a href="https://www.openGeeksLab.co
 
 # Licence
 Expanding is released under the MIT license.
-
-
-
-# paper-onboarding

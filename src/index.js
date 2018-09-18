@@ -25,7 +25,7 @@ const viewRadiusInterpolationR = {
 
 const fadeInInterpolation = {
   inputRange: [0, 1],
-  outputRange: [0.4, 1],
+  outputRange: [0.0, 1],
 };
 
 const fadeOutInterpolation = {
