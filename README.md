@@ -70,7 +70,7 @@ import {
 
 import bgImage from './img.png';
 
-export default class App extends Component {
+export default class Screen1 extends Component {
   static backgroundColor = '#ff3631';
 
   render() {
