@@ -1,7 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
-
-const { height } = Dimensions.get('screen');
-const tabIndicatorTopPosition = 30;
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,13 +24,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   indicatorContainer: {
+    flexDirection: 'row',
     position: 'absolute',
-    bottom: tabIndicatorTopPosition,
+    bottom: 30,
     width: '100%',
-    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: 'transparent',
   },
   tabnabIndicatorContainer: {
     flexDirection: 'row',

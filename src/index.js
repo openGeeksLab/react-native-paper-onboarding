@@ -45,12 +45,12 @@ const viewScaleInterpolationR = {
 
 const tabpanelInterpolation = {
   inputRange: [0, 1],
-  outputRange: [0, -10],
+  outputRange: [0, -12],
 };
 
 const tabpanelInterpolationR = {
   inputRange: [0, 1],
-  outputRange: [0, 10],
+  outputRange: [0, 12],
 };
 
 class PaperOnboardingContainer extends Component {
@@ -64,9 +64,9 @@ class PaperOnboardingContainer extends Component {
     this.nextBackground = 0;
     this.state = {
       routes,
-      animationFinish: true,
-      currentScreen: 0,
       direction: true,
+      currentScreen: 0,
+      animationFinish: true,
       nextPoint: { x: 0, y: 0 },
       rootBackground: this.props.screens[0].backgroundColor,
       backgroundAnimation: new Animated.Value(0),
@@ -76,16 +76,13 @@ class PaperOnboardingContainer extends Component {
         onMoveShouldSetResponderCapture: () => true,
         onMoveShouldSetPanResponderCapture: () => true,
         onPanResponderRelease: (e, gestureState) => {
-          const {
-            x0,
-            y0,
-            dx,
-            dy,
-          } = gestureState;
+          const { x0, y0, dx, dy } = gestureState; // eslint-disable-line object-curly-newline
+
           const nextPoint = {
             x: x0 + dx,
             y: y0 + dy,
           };
+
           if (Math.abs(dx) >= RESPOND_THRESHHOLD) {
             if (dx > 0) {
               this.onSwipe('right', nextPoint);
@@ -149,7 +146,7 @@ class PaperOnboardingContainer extends Component {
       },
       () => Animated.timing(
         backgroundAnimation,
-        { toValue: 1, duration: 800 },
+        { toValue: 1, duration: 900 },
       ).start(() => {
         backgroundAnimation.setValue(0);
         this.nextBackground = this.props.screens[currentScreen].backgroundColor;
@@ -272,7 +269,6 @@ class PaperOnboardingContainer extends Component {
     } = this.state;
     const currrentScreenAnim = direction ? this.fadeOutStyle : this.fadeOutStyle;
     const nextScreenAnim = direction ? this.fadeInStyle : this.fadeInStyle;
-
     const screensArray = [
       <Animated.View
         key={'current_screen_container'}
@@ -280,7 +276,7 @@ class PaperOnboardingContainer extends Component {
       >
         {routes[currentScreen]}
       </Animated.View>,
-      nextIndex
+      nextIndex !== undefined
         ? (
           <Animated.View
             key={'next_screen_container'}
