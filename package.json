@@ -1,5 +1,5 @@
 {
-  "name": "react-native-paper-onboarding",
+  "name": "@opengeekslab/react-native-paper-onboarding",
   "version": "1.0.2",
   "description": "You can be used at the initial screen of  the application, for a visual demonstration of the functions of the app. You can also show in quick access what has been changed or added, just swipe the screen left or right",
   "main": "src/index.js",
