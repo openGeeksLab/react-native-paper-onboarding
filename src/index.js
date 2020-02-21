@@ -65,8 +65,8 @@ class PaperOnboardingContainer extends Component {
       rootBackground: this.props.screens[0].backgroundColor,
       backgroundAnimation: new Animated.Value(0),
       panResponder: PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onStartShouldSetPanResponderCapture: () => true,
+        onStartShouldSetPanResponder: () => false,
+        onStartShouldSetPanResponderCapture: () => false,
         onMoveShouldSetPanResponder: (_, gestureState) => {
           const { dx, dy } = gestureState;
           return dx > 2 || dx < -2 || dy > 2 || dy < -2;
@@ -270,7 +270,11 @@ class PaperOnboardingContainer extends Component {
     return [
       <Animated.View
         key={"current_screen_container"}
-        style={[styles.screenAnimatedContainer, this.fadeOutStyle()]}
+        style={[
+          styles.screenAnimatedContainer,
+          this.fadeOutStyle(),
+          { zIndex: 5 }
+        ]}
       >
         {routes[currentScreen]}
       </Animated.View>,
