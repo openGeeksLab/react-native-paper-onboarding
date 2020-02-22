@@ -54,7 +54,9 @@ class PaperOnboardingContainer extends Component {
 
   constructor(props) {
     super(props);
-    const routes = this.props.screens.map(item => React.createElement(item));
+    const routes = this.props.screens.map(item =>
+      React.createElement(item, { onboarding: this })
+    );
     this.nextBackground = 0;
     this.state = {
       routes,
@@ -112,6 +114,14 @@ class PaperOnboardingContainer extends Component {
       nextPoint,
       isSwipeDirectionLeft
     );
+  }
+
+  next() {
+    this.onSwipe("left", { x: 0, y: 0 });
+  }
+
+  previous() {
+    this.onSwipe("right", { x: 0, y: 0 });
   }
 
   getNextScreenIndex(direction) {
