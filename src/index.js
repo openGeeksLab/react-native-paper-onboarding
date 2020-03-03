@@ -312,11 +312,13 @@ class PaperOnboardingContainer extends Component {
       rootBackground
     } = this.state;
     const screensArray = this.getScreensArray();
-
+    const panHandlers = this.this.state.panResponder
+      ? this.state.panResponder.panHandlers
+      : {};
     return (
       <View
         style={[styles.container, { backgroundColor: rootBackground }]}
-        {...this.state.panResponder.panHandlers}
+        {...panHandlers}
       >
         {this.renderRippleBackground(
           routes[currentScreen],
