@@ -312,7 +312,7 @@ class PaperOnboardingContainer extends Component {
       rootBackground
     } = this.state;
     const screensArray = this.getScreensArray();
-    const panHandlers = this.this.state.panResponder
+    const panHandlers = this.state.panResponder
       ? this.state.panResponder.panHandlers
       : {};
     return (
