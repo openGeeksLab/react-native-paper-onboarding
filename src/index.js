@@ -49,7 +49,9 @@ const tabpanelInterpolationR = {
 
 class PaperOnboardingContainer extends Component {
   static propTypes = {
-    screens: PropTypes.array
+    screens: PropTypes.array,
+    disableGestures: PropTypes.bool,
+    disableDots: PropTypes.bool
   };
 
   constructor(props) {
@@ -66,35 +68,37 @@ class PaperOnboardingContainer extends Component {
       isSwipeDirectionLeft: true,
       rootBackground: this.props.screens[0].backgroundColor,
       backgroundAnimation: new Animated.Value(0),
-      panResponder: PanResponder.create({
-        onStartShouldSetPanResponder: () => false,
-        onStartShouldSetPanResponderCapture: () => false,
-        onMoveShouldSetPanResponder: (_, gestureState) => {
-          const { dx, dy } = gestureState;
-          return dx > 2 || dx < -2 || dy > 2 || dy < -2;
-        },
-        onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-          const { dx, dy } = gestureState;
-          return dx > 2 || dx < -2 || dy > 2 || dy < -2;
-        },
-        onPanResponderRelease: (e, gestureState) => {
-          const { x0, y0, dx, dy } = gestureState; // eslint-disable-line object-curly-newline
+      panResponder: !props.disableGestures
+        ? PanResponder.create({
+            onStartShouldSetPanResponder: () => false,
+            onStartShouldSetPanResponderCapture: () => false,
+            onMoveShouldSetPanResponder: (_, gestureState) => {
+              const { dx, dy } = gestureState;
+              return dx > 2 || dx < -2 || dy > 2 || dy < -2;
+            },
+            onMoveShouldSetPanResponderCapture: (_, gestureState) => {
+              const { dx, dy } = gestureState;
+              return dx > 2 || dx < -2 || dy > 2 || dy < -2;
+            },
+            onPanResponderRelease: (e, gestureState) => {
+              const { x0, y0, dx, dy } = gestureState; // eslint-disable-line object-curly-newline
 
-          const nextPoint = {
-            x: x0 + dx,
-            y: y0 + dy
-          };
+              const nextPoint = {
+                x: x0 + dx,
+                y: y0 + dy
+              };
 
-          if (Math.abs(dx) >= RESPOND_THRESHHOLD) {
-            if (dx > 0) {
-              this.onSwipe("right", nextPoint);
-            } else {
-              this.onSwipe("left", nextPoint);
+              if (Math.abs(dx) >= RESPOND_THRESHHOLD) {
+                if (dx > 0) {
+                  this.onSwipe("right", nextPoint);
+                } else {
+                  this.onSwipe("left", nextPoint);
+                }
+              }
+              return true;
             }
-          }
-          return true;
-        }
-      })
+          })
+        : null
     };
   }
 
@@ -223,6 +227,7 @@ class PaperOnboardingContainer extends Component {
   };
 
   renderTabIndicators(isSwipeDirectionLeft) {
+    if (this.props.disableDots) return null;
     const { screens } = this.props;
     const { currentScreen, backgroundAnimation } = this.state;
     const translate = isSwipeDirectionLeft
