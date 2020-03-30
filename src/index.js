@@ -149,20 +149,22 @@ class PaperOnboardingContainer extends Component {
   callAnimations = (currentScreen, nextIndex) => {
     const { backgroundAnimation } = this.state;
     const { screens } = this.props;
-    Animated.timing(backgroundAnimation, { toValue: 1, duration: 900 }).start(
-      () => {
-        backgroundAnimation.setValue(0);
-        this.nextBackground = screens[currentScreen].backgroundColor;
+    Animated.timing(backgroundAnimation, {
+      toValue: 1,
+      duration: 900,
+      useNativeDriver: true
+    }).start(() => {
+      backgroundAnimation.setValue(0);
+      this.nextBackground = screens[currentScreen].backgroundColor;
 
-        this.setState({
-          nextIndex: null,
-          animationFinish: true,
-          currentScreen: nextIndex,
-          rootBackground: screens[nextIndex].backgroundColor,
-          nextPoint: { x: 0, y: 0 }
-        });
-      }
-    );
+      this.setState({
+        nextIndex: null,
+        animationFinish: true,
+        currentScreen: nextIndex,
+        rootBackground: screens[nextIndex].backgroundColor,
+        nextPoint: { x: 0, y: 0 }
+      });
+    });
   };
 
   startBackgroundAnimation = (
