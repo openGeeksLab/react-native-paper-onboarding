@@ -128,6 +128,12 @@ class PaperOnboardingContainer extends Component {
     this.onSwipe("right", { x: 0, y: 0 });
   }
 
+  setCurrentScreen(idx) {
+    this.setState({
+      currentScreen: 0
+    })
+  }
+
   getNextScreenIndex(direction) {
     const { currentScreen, routes } = this.state;
     let directionModifier = 0;
