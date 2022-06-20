@@ -137,7 +137,7 @@ class PaperOnboardingContainer extends Component {
     const { screens } = this.props;
     Animated.timing(
       backgroundAnimation,
-      { toValue: 1, duration: 900 },
+      { toValue: 1, duration: 900, useNativeDriver:true },
     ).start(() => {
       backgroundAnimation.setValue(0);
       this.nextBackground = screens[currentScreen].backgroundColor;
