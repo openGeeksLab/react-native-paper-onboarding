@@ -33,7 +33,7 @@ This project is developed and maintained by <a href="https://www.openGeeksLab.co
 
 ## Installation
 Just run:
-- npm i @opengeekslab/react-native-paper-onboarding
+- npm i react-native-paper-onboarding
 
 ## Basic usage
 The library depends on that each screen should contain a static backgroundColor field which contains the desired background color for this screen. The screen itself should have a transparent background
@@ -59,6 +59,7 @@ export default class App extends Component {
 }
 ```
 ## Screen example
+#### Class component
 ```javascript
 import React, { Component } from 'react';
 import {
@@ -130,6 +131,81 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+```
+
+#### Functional component
+```javascript
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  Image,
+  View,
+  Text,
+} from 'react-native';
+
+import bgImage from './img.png';
+
+function Screen1() {
+   return (
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            blurRadius={0}
+            source={bgImage}
+            style={styles.image}
+            resizeMode={'contain'}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitle}>
+            INVITE FRIENDS
+          </Text>
+          <Text style={styles.lilText}>
+            Listen Your Favorite Music Together
+          </Text>
+        </View>
+      </View>
+    );
+}
+
+// 👇 Sets the background color for the screen
+Screen1.backgroundColor = '#ff3631';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
+  },
+  imageContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  textContainer: {
+    height: '27%',
+    paddingLeft: 25,
+    backgroundColor: 'transparent',
+  },
+  textTitle: {
+    fontSize: 56,
+    fontFamily: 'Bebas Neue',
+    color: 'rgb(255, 255, 255)',
+    backgroundColor: 'transparent',
+  },
+  lilText: {
+    fontSize: 13,
+    fontFamily: 'Montserrat',
+    color: 'rgb(255, 255, 255)',
+    backgroundColor: 'transparent',
+  },
+});
+
+export default Screen1;
 ```
 
 # Contact us if interested.
