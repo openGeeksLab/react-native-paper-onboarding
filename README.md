@@ -33,7 +33,7 @@ This project is developed and maintained by <a href="https://www.openGeeksLab.co
 
 ## Installation
 Just run:
-- npm i @opengeekslab/react-native-paper-onboarding
+- npm i react-native-paper-onboarding
 
 ## Basic usage
 The library depends on that each screen should contain a static backgroundColor field which contains the desired background color for this screen. The screen itself should have a transparent background
